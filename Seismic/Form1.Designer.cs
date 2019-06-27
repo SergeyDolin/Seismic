@@ -1,6 +1,6 @@
 ﻿namespace Seismic
 {
-    partial class Form1
+    partial class FormSeismic
     {
         /// <summary>
         /// Required designer variable.
@@ -28,13 +28,82 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.utc = new System.Windows.Forms.Button();
+            this.derivatives = new System.Windows.Forms.Button();
+            this.earthquakes = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.report = new System.Windows.Forms.Button();
+            this.SuspendLayout();
+            // 
+            // utc
+            // 
+            this.utc.Location = new System.Drawing.Point(12, 12);
+            this.utc.Name = "utc";
+            this.utc.Size = new System.Drawing.Size(322, 60);
+            this.utc.TabIndex = 0;
+            this.utc.Text = "UT1-UTC";
+            this.utc.UseVisualStyleBackColor = true;
+            this.utc.Click += new System.EventHandler(this.Utc_Click);
+            // 
+            // derivatives
+            // 
+            this.derivatives.Location = new System.Drawing.Point(13, 96);
+            this.derivatives.Name = "derivatives";
+            this.derivatives.Size = new System.Drawing.Size(322, 54);
+            this.derivatives.TabIndex = 1;
+            this.derivatives.Text = "Partial derivatives";
+            this.derivatives.UseVisualStyleBackColor = true;
+            // 
+            // earthquakes
+            // 
+            this.earthquakes.Location = new System.Drawing.Point(13, 173);
+            this.earthquakes.Name = "earthquakes";
+            this.earthquakes.Size = new System.Drawing.Size(322, 50);
+            this.earthquakes.TabIndex = 2;
+            this.earthquakes.Text = "Earthquakes";
+            this.earthquakes.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(341, 12);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(400, 282);
+            this.textBox1.TabIndex = 3;
+            // 
+            // report
+            // 
+            this.report.Location = new System.Drawing.Point(13, 247);
+            this.report.Name = "report";
+            this.report.Size = new System.Drawing.Size(322, 47);
+            this.report.TabIndex = 4;
+            this.report.Text = "Report";
+            this.report.UseVisualStyleBackColor = true;
+            // 
+            // FormSeismic
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            this.ClientSize = new System.Drawing.Size(753, 307);
+            this.Controls.Add(this.report);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.earthquakes);
+            this.Controls.Add(this.derivatives);
+            this.Controls.Add(this.utc);
+            this.Name = "FormSeismic";
+            this.Text = "Seismic";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         #endregion
+
+        private System.Windows.Forms.Button utc;
+        private System.Windows.Forms.Button derivatives;
+        private System.Windows.Forms.Button earthquakes;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button report;
     }
 }
 
