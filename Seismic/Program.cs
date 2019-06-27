@@ -16,7 +16,7 @@ namespace Seismic
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormSeismic());
+            Application.Run(new Form1());
         }
     }
 }
