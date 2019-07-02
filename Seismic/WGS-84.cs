@@ -49,6 +49,14 @@ namespace Seismic
         {
             return (Math.Pow(Ang, 2) * Math.Pow(a, 2) * B) / Meart_f;
         }
+        public Double q(Double Ang)
+        {
+            return (Math.Pow(Ang, 2) * Math.Pow(a, 3)) / Meart_f;
+        }
+        public Double J2(Double e2, Double m, Double el2, Double q0)
+        {
+            return (e2 / 3) * (1 - (2 * m * Math.Sqrt(el2)) / (15 * q0));
+        }
         public Double a_Angular_velocity(Double q, Double J2)
         {
             return 1.5 * J2 + 0.5 * q + (9 / 8) * Math.Pow(J2, 2) - (11 / 56) * Math.Pow(q, 2) - (3 / 14) * J2 * q; ;
@@ -76,6 +84,12 @@ namespace Seismic
         public Double Alpha(Double A, Double B)
         {
             return ((A - B) / A);
+        }
+        //Отношение центробежной силы к силе тяжести на экваторе
+        public Double Centrifugal_Force(Double Angular, Double A)
+        {
+            double q = (Math.Pow(Angular, 2) * A) / Ye_true;
+            return q;
         }
         //Моменты инерции
         public Double main_momentC_Af(Double A, Double Alpha, Double Angular)

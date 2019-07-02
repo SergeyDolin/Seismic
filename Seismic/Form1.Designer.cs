@@ -33,6 +33,7 @@
             this.earthquakes = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.report = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // utc
@@ -53,6 +54,7 @@
             this.derivatives.TabIndex = 1;
             this.derivatives.Text = "Partial derivatives";
             this.derivatives.UseVisualStyleBackColor = true;
+            this.derivatives.Click += new System.EventHandler(this.Derivatives_Click);
             // 
             // earthquakes
             // 
@@ -80,6 +82,10 @@
             this.report.Text = "Report";
             this.report.UseVisualStyleBackColor = true;
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // FormSeismic
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -104,6 +110,7 @@
         private System.Windows.Forms.Button earthquakes;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button report;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 

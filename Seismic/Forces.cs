@@ -15,12 +15,11 @@ namespace Seismic
     class Forces
     {
         private int i;
-
-        public List<Double> Ftwo(Double ls, Double a, Double alpha)
+        public List<Double> Ftwo(Double ang, Double a, Double alpha)
         {
             List<Double> fTwo = new List<Double>();
-
-            fTwo.Add((Math.Pow(ls, 2) * a * (1 - alpha) * Math.Sqrt(1 + 4 * Math.Tan(35 * (Math.PI / 180)))) / (3 * (Math.Sqrt(Math.Pow((1 - alpha), 2) + Math.Tan(35 * (Math.PI / 180))))));
+            
+            fTwo.Add((Math.Pow(ang, 2) * a * (1 - alpha) * Math.Sqrt(1 + 4 * Math.Tan(35 * (Math.PI / 180)))) / (3 * (Math.Sqrt(Math.Pow((1 - alpha), 2) + Math.Tan(35 * (Math.PI / 180))))));
             return fTwo;
         }
         public List<Double> Fk(List<Double> f2)
@@ -45,18 +44,15 @@ namespace Seismic
             }
             return FN;
         }
-        public List<Double> Fr(List<Double> fk, List<Double> fn, Double alpha)
+        public List<Double> Fr(Double fk, Double fn, Double alpha)
         {
             List<Double> FR = new List<Double>();
 
             Double bEarth = Math.Atan(1 / (Math.Sqrt(2) * (1 - alpha)));
-            for (int j = 0; j < fk.Count; j++)
-            {
-                FR.Add(fn[j] * Math.Cos(bEarth) - fk[j] * Math.Sin(bEarth));
-            }
+
+            FR.Add(fn * Math.Cos(bEarth) - fk * Math.Sin(bEarth));
+
             return FR;
         }
-
-
     }
 }
