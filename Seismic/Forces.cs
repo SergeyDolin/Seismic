@@ -14,7 +14,6 @@ namespace Seismic
 {
     class Forces
     {
-        private int i;
         public List<Double> Ftwo(Double ang, Double a, Double alpha)
         {
             List<Double> fTwo = new List<Double>();
@@ -22,26 +21,22 @@ namespace Seismic
             fTwo.Add((Math.Pow(ang, 2) * a * (1 - alpha) * Math.Sqrt(1 + 4 * Math.Tan(35 * (Math.PI / 180)))) / (3 * (Math.Sqrt(Math.Pow((1 - alpha), 2) + Math.Tan(35 * (Math.PI / 180))))));
             return fTwo;
         }
-        public List<Double> Fk(List<Double> f2)
+        public List<Double> Fk(Double f2)
         {
             List<Double> FK = new List<Double>();
-            for (i = 0; i < f2.Count; i++)
-            {
-                double beta = Math.Atan(2 * Math.Tan(35 * (Math.PI / 180)));
-                double alpha = (90 * (Math.PI / 180)) - ((35 * (Math.PI / 180)) + beta);
-                FK.Add(f2[i] * Math.Cos(alpha));
-            }
+            double beta = Math.Atan(2 * Math.Tan(35 * (Math.PI / 180)));
+            double alpha = (90 * (Math.PI / 180)) - ((35 * (Math.PI / 180)) + beta);
+            FK.Add(f2 * Math.Cos(alpha));
+
             return FK;
         }
-        public List<Double> Fn(List<Double> f2)
+        public List<Double> Fn(Double f2)
         {
             List<Double> FN = new List<Double>();
-            for (i = 0; i < f2.Count; i++)
-            {
-                double beta = Math.Atan(2 * Math.Tan(35 * (Math.PI / 180)));
-                double alpha = (90 * (Math.PI / 180)) - ((35 * (Math.PI / 180)) + beta);
-                FN.Add(f2[i] * Math.Sin(alpha));
-            }
+            double beta = Math.Atan(2 * Math.Tan(35 * (Math.PI / 180)));
+            double alpha = (90 * (Math.PI / 180)) - ((35 * (Math.PI / 180)) + beta);
+            FN.Add(f2 * Math.Sin(alpha));
+         
             return FN;
         }
         public List<Double> Fr(Double fk, Double fn, Double alpha)

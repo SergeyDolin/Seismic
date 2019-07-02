@@ -11,6 +11,8 @@ using System.IO;
 using System.Collections;
 using System.Globalization;
 using System.Configuration;
+using System.Diagnostics;
+using Xceed.Words.NET;
 //using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Seismic
@@ -41,8 +43,6 @@ namespace Seismic
         List<Double> C20 = new List<Double>();
         List<Double> q = new List<Double>();
         List<Double> AvV = new List<Double>();
-        int caseForces = 0;
-        double Ye = 0.0;
         public FormSeismic()
         {
             InitializeComponent();
@@ -126,32 +126,84 @@ namespace Seismic
                     ALPHA.Add(wGS_84.Alpha(a, b));
                 }
             }
+            //Частные производные
             for (int i = 0; i < Angular.Count() && i < A.Count() && i < ALPHA.Count(); i++)
             {
-                FTWO = forces.Ftwo(Angular[i], A[i], ALPHA[i]);
+                List<Double> FtwoCount = new List<Double>();
+                FtwoCount = forces.Ftwo(Angular[i], A[i], ALPHA[i]);
+                foreach (var f in FtwoCount)
+                {
+                    FTWO.Add(f);
+                }
             }
-            foreach (var ftwo in FTWO)
+            for (int i = 0; i < FTWO.Count(); i++)
             {
-                fk = forces.Fk(FTWO);
-                fn = forces.Fn(FTWO);
+                List<Double> FkCount = new List<Double>();
+                List<Double> FnCount = new List<Double>();
+                FkCount = forces.Fk(FTWO[i]);
+                FnCount = forces.Fn(FTWO[i]);
+                foreach (var f in FkCount)
+                {
+                    fk.Add(f);
+                }
+                foreach (var f in FnCount)
+                {
+                    fn.Add(f);
+                }
             }
             for (int i = 0; i < fk.Count() && i < fn.Count() && i < ALPHA.Count(); i++)
             {
-                FTWO = forces.Ftwo(fk[i], fn[i], ALPHA[i]);
+                List<Double> FrCount = new List<Double>();
+                FrCount = forces.Fr(fk[i], fn[i], ALPHA[i]);
+                foreach (var f in FrCount)
+                {
+                    fr.Add(f);
+                }
             }
             textBox1.Clear();
             for (int i = 0; i < Angular.Count(); i++)
             {
-                //Решить проблему с переносом строки, почему то в текстбоксе не работет \n, \r.
-                textBox1.Text += "ω " + Angular[i].ToString() + " рад/сек";
+                textBox1.Text += "ω " + Angular[i].ToString() + " рад/сек" + "\r\n";
             }
             
 
         }
-
         private void Derivatives_Click(object sender, EventArgs e)
         {
+            textBox1.Clear();
+            for (int i = 0; i < FTWO.Count() && i < fk.Count() && i < fn.Count() && i < fr.Count(); i++)
+            {
+                textBox1.Text += "Fk"+ i + " = " + fk[i].ToString() + " H " + "\r\n";
+                textBox1.Text += "Fn" + i + " = " + fn[i].ToString() + " H " + "\r\n";
+                textBox1.Text += "Fr" + i + " = " + fr[i].ToString() +" H " + "\r\n";
+                textBox1.Text += "Fd" + i + " = " + FTWO[i].ToString() + " H " + "\r\n";
+            }
+        }
 
+        private void Earthquakes_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Report_Click(object sender, EventArgs e)
+        {
+            string fileName = @"C:\Users\Serge\source\repos\Seismic\Report.docx";
+            string headlineText = "Отчёт о корреляции частных производных и сейсмики Земли";
+            //Подумать что писать и при каких условиях
+            string paraOne = "";
+
+            var headlineFormat = new Formatting();
+            headlineFormat.Size = 18D;
+            headlineFormat.Position = 12;
+
+            var paraFormat = new Formatting();
+            paraFormat.Size = 10D;
+
+            var doc = DocX.Create(fileName);
+            doc.InsertParagraph(headlineText, false, headlineFormat);
+            doc.InsertParagraph(paraOne, false, paraFormat);
+            doc.Save();
+            Process.Start("WINWORD.EXE", fileName);
         }
     }
 }

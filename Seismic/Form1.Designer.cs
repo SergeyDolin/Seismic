@@ -64,6 +64,7 @@
             this.earthquakes.TabIndex = 2;
             this.earthquakes.Text = "Earthquakes";
             this.earthquakes.UseVisualStyleBackColor = true;
+            this.earthquakes.Click += new System.EventHandler(this.Earthquakes_Click);
             // 
             // textBox1
             // 
@@ -81,6 +82,7 @@
             this.report.TabIndex = 4;
             this.report.Text = "Report";
             this.report.UseVisualStyleBackColor = true;
+            this.report.Click += new System.EventHandler(this.Report_Click);
             // 
             // openFileDialog1
             // 
