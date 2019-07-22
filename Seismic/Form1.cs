@@ -22,27 +22,36 @@ namespace Seismic
         List<Double> fk = new List<Double>();
         List<Double> fn = new List<Double>();
         List<Double> fr = new List<Double>();
-        List<Double> ETime = new List<Double>();
+        List<Double> TAI_UTC = new List<Double>();
+        List<Double> UT1_UTC = new List<Double>();
         List<Double> Angular = new List<Double>();
         List<Double> A = new List<Double>();
         List<Double> B = new List<Double>();
         List<Double> ALPHA = new List<Double>();
         List<Double> dAlpha = new List<Double>();
         List<Double> FTWO = new List<Double>();
-        List<string> list = new List<string>();
+        List<Double> EQF = new List<Double>();
         Forces forces = new Forces();
         WGS_84 wGS_84 = new WGS_84();
-        line_speed_Earth line_Speed_Earth = new line_speed_Earth();
+        angular_speed_Earth AngSpeedEarth = new angular_speed_Earth();
         Double B1 = new Double();
         Double e2 = new Double();
         Double el2 = new Double();
-        Double E = new Double();
         Double q0 = new Double();
         List<Double> m = new List<Double>();
         List<Double> J2 = new List<Double>();
-        List<Double> C20 = new List<Double>();
         List<Double> q = new List<Double>();
         List<Double> AvV = new List<Double>();
+        int Q0_10 = new int();
+        int Q10_20 = new int();
+        int Q20_30 = new int();
+        int Q30_40 = new int();
+        int Q40_50 = new int();
+        int Q50_60 = new int();
+        int Q60_70 = new int();
+        int Q70_80 = new int();
+        int Q80_90 = new int();
+
         public FormSeismic()
         {
             InitializeComponent();
@@ -62,11 +71,40 @@ namespace Seismic
                     //Конвертация текста в выбранный тип
                     foreach (var t in vs)
                     {
-                        textBox1.Text = t;
                         var db = t.Split('\r');
                         foreach (var dbd in db)
                         {
-                            ETime.Add(Double.Parse(dbd));
+                            UT1_UTC.Add(Double.Parse(dbd));
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                    $"Details:\n\n{ex.StackTrace}");
+                }
+            }
+            
+        }
+        private void Tai_Click(object sender, EventArgs e)
+        {
+            openFileDialog1 = new OpenFileDialog();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    //Чтение выбранного файла
+                    List<string> vs = new List<string>();
+                    var sr = new StreamReader(openFileDialog1.FileName);
+                    vs.Add(sr.ReadToEnd());
+                    //Конвертация текста в выбранный тип
+                    foreach (var t in vs)
+                    {
+                        var db = t.Split('\r');
+                        foreach (var dbd in db)
+                        {
+                            TAI_UTC.Add(Double.Parse(dbd));
                         }
                     }
 
@@ -78,15 +116,17 @@ namespace Seismic
                 }
             }
             //Линейная и угловая скорости Земли
-            foreach (Double ET in ETime)
+            foreach (Double ut1 in UT1_UTC)
             {
-                Angular.Add(line_Speed_Earth.Angular_velocity(ET));
+                foreach (Double tai in TAI_UTC)
+                {
+                    Angular.Add(AngSpeedEarth.Angular_velocity(tai, ut1));
+                }
             }
             //Приращений осей эллипсоида
             B1 = wGS_84.B();
             e2 = wGS_84.e2();
             el2 = wGS_84.el2(e2);
-            E = wGS_84.E(e2);
             q0 = wGS_84.QZero(el2);
             foreach (var ang in Angular)
             {
@@ -117,7 +157,6 @@ namespace Seismic
                     B.Add(wGS_84.NEW_B(wGS_84.Delta_B(a, dAl)));
                 }
             }
-
             //Сжатие эллипсоида
             foreach (var a in A)
             {
@@ -165,9 +204,9 @@ namespace Seismic
             {
                 textBox1.Text += "ω " + Angular[i].ToString() + " рад/сек" + "\r\n";
             }
-            
-
         }
+
+
         private void Derivatives_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
@@ -179,12 +218,86 @@ namespace Seismic
                 textBox1.Text += "Fd" + i + " = " + FTWO[i].ToString() + " H " + "\r\n";
             }
         }
-
         private void Earthquakes_Click(object sender, EventArgs e)
         {
+            openFileDialog1 = new OpenFileDialog();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    //Чтение выбранного файла
+                    List<string> vs = new List<string>();
+                    var sr = new StreamReader(openFileDialog1.FileName);
+                    vs.Add(sr.ReadToEnd());
+                    //Конвертация текста в выбранный тип
+                    foreach (var t in vs)
+                    {
+                        var db = t.Split('\r');
+                        foreach (var dbd in db)
+                        {
+                            EQF.Add(Double.Parse(dbd));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Security error.\n\nError message: {ex.Message}\n\n" +
+                    $"Details:\n\n{ex.StackTrace}");
+                }
+            }
 
+            foreach (var qF in EQF)
+            {
+                if (qF >= 0 || qF < 10)
+                {
+                    Q0_10 += 1;
+                }
+                if (qF >= 10 || qF < 20)
+                {
+                    Q10_20 += 1;
+                }
+                if (qF >= 20 || qF < 30)
+                {
+                    Q20_30 += 1;
+                }
+                if (qF >= 30 || qF < 40)
+                {
+                    Q30_40 += 1;
+                }
+                if (qF >= 40 || qF < 50)
+                {
+                    Q40_50 += 1;
+                }
+                if (qF >= 50 || qF < 60)
+                {
+                    Q50_60 += 1;
+                }
+                if (qF >= 60 || qF < 70)
+                {
+                    Q60_70 += 1;
+                }
+                if (qF >= 70 || qF < 80)
+                {
+                    Q70_80 += 1;
+                }
+                if (qF >= 80 || qF <= 90)
+                {
+                    Q80_90 += 1;
+                }
+            }
+
+            textBox1.Clear();
+            textBox1.Text += "Количество землятрясений на один квадратный киллометр на сигментах с шагом в 10 градусов: " + "\r\n";
+            textBox1.Text += "Сигмент от 0 до 10 = " + Q0_10 / wGS_84.SquareSegmentEarth(0,10) + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 10 до 20 = " + Q10_20 / wGS_84.SquareSegmentEarth(10, 20) + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 20 до 30 = " + Q20_30 / wGS_84.SquareSegmentEarth(20, 30) + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 30 до 40 = " + Q30_40 / wGS_84.SquareSegmentEarth(30, 40) + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 40 до 50 = " + Q40_50 / wGS_84.SquareSegmentEarth(40, 50) + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 50 до 60 = " + Q50_60 / wGS_84.SquareSegmentEarth(50, 60) + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 60 до 70 = " + Q60_70 / wGS_84.SquareSegmentEarth(60, 70) + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 70 до 80 = " + Q70_80 / wGS_84.SquareSegmentEarth(70, 80) + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 80 до 90 = " + Q80_90 / wGS_84.SquareSegmentEarth(80, 90) + " зем/м^2" + "\r\n";
         }
-
         private void Report_Click(object sender, EventArgs e)
         {
             string fileName = @"C:\Users\Serge\source\repos\Seismic\Report.docx";
@@ -205,5 +318,7 @@ namespace Seismic
             doc.Save();
             Process.Start("WINWORD.EXE", fileName);
         }
+
+
     }
 }

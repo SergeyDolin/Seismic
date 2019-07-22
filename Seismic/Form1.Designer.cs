@@ -34,13 +34,14 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.report = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.tai = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // utc
             // 
             this.utc.Location = new System.Drawing.Point(12, 12);
             this.utc.Name = "utc";
-            this.utc.Size = new System.Drawing.Size(322, 60);
+            this.utc.Size = new System.Drawing.Size(153, 60);
             this.utc.TabIndex = 0;
             this.utc.Text = "UT1-UTC";
             this.utc.UseVisualStyleBackColor = true;
@@ -88,11 +89,22 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // tai
+            // 
+            this.tai.Location = new System.Drawing.Point(187, 12);
+            this.tai.Name = "tai";
+            this.tai.Size = new System.Drawing.Size(148, 60);
+            this.tai.TabIndex = 5;
+            this.tai.Text = "TAI-UTC";
+            this.tai.UseVisualStyleBackColor = true;
+            this.tai.Click += new System.EventHandler(this.Tai_Click);
+            // 
             // FormSeismic
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(753, 307);
+            this.Controls.Add(this.tai);
             this.Controls.Add(this.report);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.earthquakes);
@@ -113,6 +125,7 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button report;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button tai;
     }
 }
 

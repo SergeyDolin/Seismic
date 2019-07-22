@@ -23,7 +23,7 @@ namespace Seismic
         public double Yp_true = 9.8321849379;
         public double f = 0.0033528106647475;
         public double BETA = 0.005302441403420636;
-
+        
         public Double B()
         {
             return a * (1 - f);
@@ -124,6 +124,12 @@ namespace Seismic
         {
             Double U = (Meart_f / E) * Math.Atan(Math.Sqrt(el2)) + (Math.Pow(Ang, 2) * Math.Pow(newA, 2)) / 3;
             return U;
+        }
+
+        public Double SquareSegmentEarth(double fi_1, double fi_2)
+        {
+            Double S = new double();
+            return S = 2 * Math.PI * Math.Pow(6378.137, 2) * Math.Abs((Math.Sin(fi_1) - Math.Sin(fi_2)));
         }
     }
 }
