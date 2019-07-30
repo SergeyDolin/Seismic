@@ -35,13 +35,14 @@
             this.report = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tai = new System.Windows.Forms.Button();
+            this.start = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // utc
             // 
             this.utc.Location = new System.Drawing.Point(12, 12);
             this.utc.Name = "utc";
-            this.utc.Size = new System.Drawing.Size(153, 60);
+            this.utc.Size = new System.Drawing.Size(114, 31);
             this.utc.TabIndex = 0;
             this.utc.Text = "UT1-UTC";
             this.utc.UseVisualStyleBackColor = true;
@@ -72,6 +73,8 @@
             this.textBox1.Location = new System.Drawing.Point(341, 12);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
+            this.textBox1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox1.Size = new System.Drawing.Size(400, 282);
             this.textBox1.TabIndex = 3;
             // 
@@ -91,19 +94,30 @@
             // 
             // tai
             // 
-            this.tai.Location = new System.Drawing.Point(187, 12);
+            this.tai.Location = new System.Drawing.Point(13, 49);
             this.tai.Name = "tai";
-            this.tai.Size = new System.Drawing.Size(148, 60);
+            this.tai.Size = new System.Drawing.Size(113, 32);
             this.tai.TabIndex = 5;
             this.tai.Text = "TAI-UTC";
             this.tai.UseVisualStyleBackColor = true;
             this.tai.Click += new System.EventHandler(this.Tai_Click);
+            // 
+            // start
+            // 
+            this.start.Location = new System.Drawing.Point(132, 12);
+            this.start.Name = "start";
+            this.start.Size = new System.Drawing.Size(203, 69);
+            this.start.TabIndex = 6;
+            this.start.Text = "Run";
+            this.start.UseVisualStyleBackColor = true;
+            this.start.Click += new System.EventHandler(this.Start_Click);
             // 
             // FormSeismic
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(753, 307);
+            this.Controls.Add(this.start);
             this.Controls.Add(this.tai);
             this.Controls.Add(this.report);
             this.Controls.Add(this.textBox1);
@@ -126,6 +140,7 @@
         private System.Windows.Forms.Button report;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button tai;
+        private System.Windows.Forms.Button start;
     }
 }
 

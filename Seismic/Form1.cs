@@ -115,98 +115,7 @@ namespace Seismic
                     $"Details:\n\n{ex.StackTrace}");
                 }
             }
-            //Линейная и угловая скорости Земли
-            foreach (Double ut1 in UT1_UTC)
-            {
-                foreach (Double tai in TAI_UTC)
-                {
-                    Angular.Add(AngSpeedEarth.Angular_velocity(tai, ut1));
-                }
-            }
-            //Приращений осей эллипсоида
-            B1 = wGS_84.B();
-            e2 = wGS_84.e2();
-            el2 = wGS_84.el2(e2);
-            q0 = wGS_84.QZero(el2);
-            foreach (var ang in Angular)
-            {
-                m.Add(wGS_84.m(ang, B1));
-                q.Add(wGS_84.q(ang));
-
-            }
-            foreach (var M in m)
-            {
-                J2.Add(wGS_84.J2(e2, M, el2, q0));
-            }
-            foreach (var j2 in J2)
-            {
-                foreach (var Q in q)
-                {
-                    AvV.Add(wGS_84.a_Angular_velocity(Q, j2));
-                }
-            }
-            foreach (var avv in AvV)
-            {
-                dAlpha.Add(wGS_84.delta_Alpha(avv));
-            }
-            foreach (var dAl in dAlpha)
-            {
-                A.Add(wGS_84.NEW_A(wGS_84.Delta_A(dAl)));
-                foreach (var a in A)
-                {
-                    B.Add(wGS_84.NEW_B(wGS_84.Delta_B(a, dAl)));
-                }
-            }
-            //Сжатие эллипсоида
-            foreach (var a in A)
-            {
-                foreach (var b in B)
-                {
-                    ALPHA.Add(wGS_84.Alpha(a, b));
-                }
-            }
-            //Частные производные
-            for (int i = 0; i < Angular.Count() && i < A.Count() && i < ALPHA.Count(); i++)
-            {
-                List<Double> FtwoCount = new List<Double>();
-                FtwoCount = forces.Ftwo(Angular[i], A[i], ALPHA[i]);
-                foreach (var f in FtwoCount)
-                {
-                    FTWO.Add(f);
-                }
-            }
-            for (int i = 0; i < FTWO.Count(); i++)
-            {
-                List<Double> FkCount = new List<Double>();
-                List<Double> FnCount = new List<Double>();
-                FkCount = forces.Fk(FTWO[i]);
-                FnCount = forces.Fn(FTWO[i]);
-                foreach (var f in FkCount)
-                {
-                    fk.Add(f);
-                }
-                foreach (var f in FnCount)
-                {
-                    fn.Add(f);
-                }
-            }
-            for (int i = 0; i < fk.Count() && i < fn.Count() && i < ALPHA.Count(); i++)
-            {
-                List<Double> FrCount = new List<Double>();
-                FrCount = forces.Fr(fk[i], fn[i], ALPHA[i]);
-                foreach (var f in FrCount)
-                {
-                    fr.Add(f);
-                }
-            }
-            textBox1.Clear();
-            for (int i = 0; i < Angular.Count(); i++)
-            {
-                textBox1.Text += "ω " + Angular[i].ToString() + " рад/сек" + "\r\n";
-            }
         }
-
-
         private void Derivatives_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
@@ -303,8 +212,6 @@ namespace Seismic
             string fileName = @"C:\Users\Serge\source\repos\Seismic\Report.docx";
             string headlineText = "Отчёт о корреляции частных производных и сейсмики Земли";
             //Подумать что писать и при каких условиях
-            string paraOne = "";
-
             var headlineFormat = new Formatting();
             headlineFormat.Size = 18D;
             headlineFormat.Position = 12;
@@ -313,12 +220,92 @@ namespace Seismic
             paraFormat.Size = 10D;
 
             var doc = DocX.Create(fileName);
-            doc.InsertParagraph(headlineText, false, headlineFormat);
-            doc.InsertParagraph(paraOne, false, paraFormat);
+            doc.InsertParagraph(headlineText, false, headlineFormat); 
             doc.Save();
             Process.Start("WINWORD.EXE", fileName);
         }
+        private void Start_Click(object sender, EventArgs e)
+        {
+            //Угловая скорости Земли
+            for (int i = 0; i < UT1_UTC.Count() && i < TAI_UTC.Count(); i++)
+            {
+                Angular.Add(AngSpeedEarth.Angular_velocity(TAI_UTC[i], UT1_UTC[i]));
+            }
+            //Приращений осей эллипсоида
+            B1 = wGS_84.B();
+            e2 = wGS_84.e2();
+            el2 = wGS_84.el2(e2);
+            q0 = wGS_84.QZero(el2);
+            foreach (var ang in Angular)
+            {
+                m.Add(wGS_84.m(ang, B1));
+                q.Add(wGS_84.q(ang));
 
-
+            }
+            foreach (var M in m)
+            {
+                J2.Add(wGS_84.J2(e2, M, el2, q0));
+            }
+            for (int i = 0; i < J2.Count() && i < q.Count(); i++)
+            {
+                AvV.Add(wGS_84.a_Angular_velocity(q[i], J2[i]));
+            }
+            foreach (var avv in AvV)
+            {
+                dAlpha.Add(wGS_84.delta_Alpha(avv));
+            }
+            foreach (var dAl in dAlpha)
+            {
+                A.Add(wGS_84.NEW_A(wGS_84.Delta_A(dAl)));
+                foreach (var a in A)
+                {
+                    B.Add(wGS_84.NEW_B(wGS_84.Delta_B(a, dAl)));
+                }
+            }
+            //Сжатие эллипсоида
+            for (int i = 0; i < A.Count() && i < B.Count(); i++)
+            {
+                ALPHA.Add(wGS_84.Alpha(A[i], B[i]));
+            }
+            //Частные производные
+            for (int i = 0; i < Angular.Count() && i < A.Count() && i < ALPHA.Count(); i++)
+            {
+                List<Double> FtwoCount = new List<Double>();
+                FtwoCount = forces.Ftwo(Angular[i], A[i], ALPHA[i]);
+                foreach (var f in FtwoCount)
+                {
+                    FTWO.Add(f);
+                }
+            }
+            for (int i = 0; i < FTWO.Count(); i++)
+            {
+                List<Double> FkCount = new List<Double>();
+                List<Double> FnCount = new List<Double>();
+                FkCount = forces.Fk(FTWO[i]);
+                FnCount = forces.Fn(FTWO[i]);
+                foreach (var f in FkCount)
+                {
+                    fk.Add(f);
+                }
+                foreach (var f in FnCount)
+                {
+                    fn.Add(f);
+                }
+            }
+            for (int i = 0; i < fk.Count() && i < fn.Count() && i < ALPHA.Count(); i++)
+            {
+                List<Double> FrCount = new List<Double>();
+                FrCount = forces.Fr(fk[i], fn[i], ALPHA[i]);
+                foreach (var f in FrCount)
+                {
+                    fr.Add(f);
+                }
+            }
+            textBox1.Clear();
+            for (int i = 0; i < Angular.Count(); i++)
+            {
+                textBox1.Text += "ω " + Angular[i].ToString() + " рад/сек" + "\r\n";
+            }
+        }
     }
 }
