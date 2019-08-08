@@ -14,9 +14,9 @@ namespace Seismic
 {
     class angular_speed_Earth
     {
-        public Double Angular_velocity(Double TAI_UTC, Double UT1_UTC)
+        public Double Angular_velocity(Double TAI_UT1, Double UT1_UTC)
         {
-            Double deltaT = 32.184 + (TAI_UTC) - (UT1_UTC);
+            Double deltaT = 32.184 - (TAI_UT1) - (UT1_UTC);
             Double EarthAngularSpeed = (2 * Math.PI) / (86164.090530833 + deltaT);
             return EarthAngularSpeed;
         }

@@ -23,7 +23,10 @@ namespace Seismic
         public double Yp_true = 9.8321849379;
         public double f = 0.0033528106647475;
         public double BETA = 0.005302441403420636;
-        
+        public double C20dyn = -0.000484165143790815;
+        public double C22dyn = 0.00000243938357328313;
+        public double Dynamic_Ellipticity = 0.0032737949;
+
         public Double B()
         {
             return a * (1 - f);
@@ -56,6 +59,10 @@ namespace Seismic
         public Double J2(Double e2, Double m, Double el2, Double q0)
         {
             return (e2 / 3) * (1 - (2 * m * Math.Sqrt(el2)) / (15 * q0));
+        }
+        public Double C20(Double J2)
+        {
+            return -1 * (J2 / Math.Sqrt(5));
         }
         public Double a_Angular_velocity(Double q, Double J2)
         {
@@ -97,20 +104,32 @@ namespace Seismic
             Double C_Af = Meart_f * (Math.Pow(A, 2) / 3) * (2 * Alpha - Math.Pow(Alpha, 2)) - ((Math.Pow(Angular, 2) * Math.Pow(A, 5)) / 3) * (1 - (9 / 7) * Alpha + (25 / 49) * Math.Pow(Alpha, 2));
             return C_Af;
         }
-        public Double main_momentCgeo(Double A, Double Alpha, Double m)
+        public Double geometric_momentCgeo(Double A, Double m)
         {
             Double Cgeo = (0.66666666666666666666 * (M * Math.Pow(10, 24)) * Math.Pow(A, 2)) * (1 - 0.4 * Math.Sqrt(((5 * m) / (2 * f)) - 1));
             return Cgeo;
         }
-        public Double main_momentAgeo(Double A, Double C20, Double Cgeo)
+        public Double geometric_momentAgeo(Double A, Double C20, Double Cgeo)
         {
             Double Ageo = Cgeo + Math.Sqrt(5) * (M * Math.Pow(10, 24)) * Math.Pow(A, 2) * C20;
             return Ageo;
         }
-        public Double main_momentHgeo(Double Ageo, Double Cgeo)
+        public Double geometric_momentHgeo(Double Ageo, Double Cgeo)
         {
             Double Hgeo = (Cgeo - Ageo) / Cgeo;
             return Hgeo;
+        }
+        public Double dynamic_momentCdyn(Double newA)
+        {
+            return -(Math.Sqrt(5)) * (5.97 * Math.Pow(10, 24)) * Math.Pow(newA, 2) * (C20dyn / Dynamic_Ellipticity);
+        }
+        public Double dynamic_momentAdyn(Double newA)
+        {
+            return (Math.Sqrt(5)) * (5.97 * Math.Pow(10, 24)) * Math.Pow(newA, 2) *((1-(1/Dynamic_Ellipticity))*C20dyn - (C22dyn / Math.Sqrt(3)));
+        }
+        public Double dynamic_momentBdyn(Double newA)
+        {
+            return (Math.Sqrt(5)) * (5.97 * Math.Pow(10, 24)) * Math.Pow(newA, 2) * ((1 - (1 / Dynamic_Ellipticity)) * C20dyn + (C22dyn / Math.Sqrt(3)));
         }
         //Параметр фигуры Земли
         public Double parm_Earth(Double q)

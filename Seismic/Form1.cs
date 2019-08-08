@@ -31,6 +31,14 @@ namespace Seismic
         List<Double> dAlpha = new List<Double>();
         List<Double> FTWO = new List<Double>();
         List<Double> EQF = new List<Double>();
+        List<Double> C20 = new List<Double>();
+        List<Double> momC_Af = new List<Double>();
+        List<Double> geoCgeo = new List<Double>();
+        List<Double> geoAgeo = new List<Double>();
+        List<Double> geoHgeo = new List<Double>();
+        List<Double> momCdyn = new List<Double>();
+        List<Double> momAdyn = new List<Double>();
+        List<Double> momBdyn = new List<Double>();
         Forces forces = new Forces();
         WGS_84 wGS_84 = new WGS_84();
         angular_speed_Earth AngSpeedEarth = new angular_speed_Earth();
@@ -116,16 +124,27 @@ namespace Seismic
                 }
             }
         }
-        private void Derivatives_Click(object sender, EventArgs e)
+        private void Inertia_Click(object sender, EventArgs e)
         {
             textBox1.Clear();
-            for (int i = 0; i < FTWO.Count() && i < fk.Count() && i < fn.Count() && i < fr.Count(); i++)
+            for (int i = 0; i < momC_Af.Count() && i < geoAgeo.Count() && i < geoCgeo.Count() && i < geoHgeo.Count() && i < momAdyn.Count() && 
+                i < momBdyn.Count() && i < momCdyn.Count(); i++)
+            {
+                textBox1.Text += "(C-A)f" + i + " = " + momC_Af[i].ToString() + " kg m^2 " + "\r\n";
+                textBox1.Text += "Ageo" + i + " = " + geoAgeo[i].ToString() + " kg m^2 " + "\r\n";
+                textBox1.Text += "Cgeo" + i + " = " + geoCgeo[i].ToString() + " kg m^2 " + "\r\n";
+                textBox1.Text += "Hgeo" + i + " = " + geoHgeo[i].ToString() + "\r\n";
+                textBox1.Text += "Adyn" + i + " = " + momAdyn[i].ToString() + " kg m^2 " + "\r\n";
+                textBox1.Text += "Bdyn" + i + " = " + momBdyn[i].ToString() + " kg m^2 " + "\r\n";
+                textBox1.Text += "Cdyn" + i + " = " + momCdyn[i].ToString() + " kg m^2 " + "\r\n";
+            }
+            /*for (int i = 0; i < FTWO.Count() && i < fk.Count() && i < fn.Count() && i < fr.Count(); i++)
             {
                 textBox1.Text += "Fk"+ i + " = " + fk[i].ToString() + " H " + "\r\n";
                 textBox1.Text += "Fn" + i + " = " + fn[i].ToString() + " H " + "\r\n";
                 textBox1.Text += "Fr" + i + " = " + fr[i].ToString() +" H " + "\r\n";
                 textBox1.Text += "Fd" + i + " = " + FTWO[i].ToString() + " H " + "\r\n";
-            }
+            }*/
         }
         private void Earthquakes_Click(object sender, EventArgs e)
         {
@@ -246,6 +265,10 @@ namespace Seismic
             {
                 J2.Add(wGS_84.J2(e2, M, el2, q0));
             }
+            foreach (var j2 in J2)
+            {
+                C20.Add(wGS_84.C20(j2));
+            }
             for (int i = 0; i < J2.Count() && i < q.Count(); i++)
             {
                 AvV.Add(wGS_84.a_Angular_velocity(q[i], J2[i]));
@@ -257,15 +280,51 @@ namespace Seismic
             foreach (var dAl in dAlpha)
             {
                 A.Add(wGS_84.NEW_A(wGS_84.Delta_A(dAl)));
-                foreach (var a in A)
-                {
-                    B.Add(wGS_84.NEW_B(wGS_84.Delta_B(a, dAl)));
-                }
+            }
+            for (int i = 0; i < A.Count() && i < dAlpha.Count(); i++)
+            {
+                B.Add(wGS_84.NEW_B(wGS_84.Delta_B(A[i], dAlpha[i])));
             }
             //Сжатие эллипсоида
             for (int i = 0; i < A.Count() && i < B.Count(); i++)
             {
                 ALPHA.Add(wGS_84.Alpha(A[i], B[i]));
+            }
+            //Моменты инерции
+            //(С-А)f
+            for (int i = 0; i < Angular.Count() && i < A.Count() && i < ALPHA.Count(); i++)
+            {
+                momC_Af.Add(wGS_84.main_momentC_Af(A[i], ALPHA[i], Angular[i]));
+            }
+            //geoCgeo
+            for (int i = 0; i < A.Count() && i < m.Count(); i++)
+            {
+                geoCgeo.Add(wGS_84.geometric_momentCgeo(A[i],m[i]));
+            }
+            //geoAgeo
+            for (int i = 0; i < A.Count() && i < C20.Count() && i < geoCgeo.Count(); i++)
+            {
+                geoAgeo.Add(wGS_84.geometric_momentAgeo(A[i],C20[i],geoCgeo[i]));
+            }
+            //geoHgeo
+            for (int i = 0; i < geoAgeo.Count() && i < geoCgeo.Count(); i++)
+            {
+                geoHgeo.Add(wGS_84.geometric_momentHgeo(geoAgeo[i], geoCgeo[i]));
+            }
+            //dynCmom
+            for (int i = 0; i < A.Count(); i++)
+            {
+                momCdyn.Add(wGS_84.dynamic_momentCdyn(A[i]));
+            }
+            //dynAmom
+            for (int i = 0; i < A.Count(); i++)
+            {
+                momAdyn.Add(wGS_84.dynamic_momentAdyn(A[i]));
+            }
+            //dynBmom
+            for (int i = 0; i < A.Count(); i++)
+            {
+                momBdyn.Add(wGS_84.dynamic_momentBdyn(A[i]));
             }
             //Частные производные
             for (int i = 0; i < Angular.Count() && i < A.Count() && i < ALPHA.Count(); i++)

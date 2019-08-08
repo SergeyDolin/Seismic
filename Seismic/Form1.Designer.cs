@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.utc = new System.Windows.Forms.Button();
-            this.derivatives = new System.Windows.Forms.Button();
+            this.inetrtions = new System.Windows.Forms.Button();
             this.earthquakes = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.report = new System.Windows.Forms.Button();
@@ -48,15 +48,15 @@
             this.utc.UseVisualStyleBackColor = true;
             this.utc.Click += new System.EventHandler(this.Utc_Click);
             // 
-            // derivatives
+            // inetrtions
             // 
-            this.derivatives.Location = new System.Drawing.Point(13, 96);
-            this.derivatives.Name = "derivatives";
-            this.derivatives.Size = new System.Drawing.Size(322, 54);
-            this.derivatives.TabIndex = 1;
-            this.derivatives.Text = "Partial derivatives";
-            this.derivatives.UseVisualStyleBackColor = true;
-            this.derivatives.Click += new System.EventHandler(this.Derivatives_Click);
+            this.inetrtions.Location = new System.Drawing.Point(13, 96);
+            this.inetrtions.Name = "inetrtions";
+            this.inetrtions.Size = new System.Drawing.Size(322, 54);
+            this.inetrtions.TabIndex = 1;
+            this.inetrtions.Text = "Moments of inertia";
+            this.inetrtions.UseVisualStyleBackColor = true;
+            this.inetrtions.Click += new System.EventHandler(this.Inertia_Click);
             // 
             // earthquakes
             // 
@@ -122,7 +122,7 @@
             this.Controls.Add(this.report);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.earthquakes);
-            this.Controls.Add(this.derivatives);
+            this.Controls.Add(this.inetrtions);
             this.Controls.Add(this.utc);
             this.Name = "FormSeismic";
             this.Text = "Seismic";
@@ -134,7 +134,7 @@
         #endregion
 
         private System.Windows.Forms.Button utc;
-        private System.Windows.Forms.Button derivatives;
+        private System.Windows.Forms.Button inetrtions;
         private System.Windows.Forms.Button earthquakes;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button report;
