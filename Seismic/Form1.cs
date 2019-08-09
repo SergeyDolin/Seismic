@@ -59,6 +59,15 @@ namespace Seismic
         int Q60_70 = new int();
         int Q70_80 = new int();
         int Q80_90 = new int();
+        double Q0 = new double();
+        double Q10 = new double();
+        double Q20 = new double();
+        double Q30 = new double();
+        double Q40 = new double();
+        double Q50 = new double();
+        double Q60 = new double();
+        double Q70 = new double();
+        double Q80 = new double();
 
         public FormSeismic()
         {
@@ -213,33 +222,95 @@ namespace Seismic
                     Q80_90 += 1;
                 }
             }
-
+            Q0 = Q0_10 / wGS_84.SquareSegmentEarth(0, 10);
+            Q10 = Q10_20 / wGS_84.SquareSegmentEarth(10, 20);
+            Q20 = Q20_30 / wGS_84.SquareSegmentEarth(20, 30);
+            Q30 = Q30_40 / wGS_84.SquareSegmentEarth(30, 40);
+            Q40 = Q40_50 / wGS_84.SquareSegmentEarth(40, 50);
+            Q50 = Q50_60 / wGS_84.SquareSegmentEarth(50, 60);
+            Q60 = Q60_70 / wGS_84.SquareSegmentEarth(60, 70);
+            Q70 = Q70_80 / wGS_84.SquareSegmentEarth(70, 80);
+            Q80 = Q80_90 / wGS_84.SquareSegmentEarth(80, 90);
             textBox1.Clear();
             textBox1.Text += "Количество землятрясений на один квадратный киллометр на сигментах с шагом в 10 градусов: " + "\r\n";
-            textBox1.Text += "Сигмент от 0 до 10 = " + Q0_10 / wGS_84.SquareSegmentEarth(0,10) + " зем/м^2" + "\r\n";
-            textBox1.Text += "Сигмент от 10 до 20 = " + Q10_20 / wGS_84.SquareSegmentEarth(10, 20) + " зем/м^2" + "\r\n";
-            textBox1.Text += "Сигмент от 20 до 30 = " + Q20_30 / wGS_84.SquareSegmentEarth(20, 30) + " зем/м^2" + "\r\n";
-            textBox1.Text += "Сигмент от 30 до 40 = " + Q30_40 / wGS_84.SquareSegmentEarth(30, 40) + " зем/м^2" + "\r\n";
-            textBox1.Text += "Сигмент от 40 до 50 = " + Q40_50 / wGS_84.SquareSegmentEarth(40, 50) + " зем/м^2" + "\r\n";
-            textBox1.Text += "Сигмент от 50 до 60 = " + Q50_60 / wGS_84.SquareSegmentEarth(50, 60) + " зем/м^2" + "\r\n";
-            textBox1.Text += "Сигмент от 60 до 70 = " + Q60_70 / wGS_84.SquareSegmentEarth(60, 70) + " зем/м^2" + "\r\n";
-            textBox1.Text += "Сигмент от 70 до 80 = " + Q70_80 / wGS_84.SquareSegmentEarth(70, 80) + " зем/м^2" + "\r\n";
-            textBox1.Text += "Сигмент от 80 до 90 = " + Q80_90 / wGS_84.SquareSegmentEarth(80, 90) + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 0 до 10 = " + Q0 + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 10 до 20 = " + Q10 + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 20 до 30 = " + Q20 + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 30 до 40 = " + Q30 + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 40 до 50 = " + Q40 + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 50 до 60 = " + Q50 + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 60 до 70 = " + Q60 + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 70 до 80 = " + Q70 + " зем/м^2" + "\r\n";
+            textBox1.Text += "Сигмент от 80 до 90 = " + Q80 + " зем/м^2" + "\r\n";
         }
         private void Report_Click(object sender, EventArgs e)
         {
             string fileName = @"C:\Users\Serge\source\repos\Seismic\Report.docx";
-            string headlineText = "Отчёт о корреляции частных производных и сейсмики Земли";
-            //Подумать что писать и при каких условиях
+            var doc = DocX.Create(fileName);
+
+            var paraFormat = new Formatting();
+            paraFormat.Size = 12D;
+
             var headlineFormat = new Formatting();
             headlineFormat.Size = 18D;
             headlineFormat.Position = 12;
 
-            var paraFormat = new Formatting();
-            paraFormat.Size = 10D;
+            List<string> repAngular = new List<string>();
+            List<string> repInertia = new List<string>();
+            List<string> repEarthQ = new List<string>();
+            //Angular ->
+            for (int i = 0; i < Angular.Count(); i++)
+            {
+                repAngular.Add("ω"+ i + " = " + Angular[i] + " рад/сек" + "\r\n");
+            }
+            string AngularText = "Полученные значения угловой скорости вращения Земли";
 
-            var doc = DocX.Create(fileName);
-            doc.InsertParagraph(headlineText, false, headlineFormat); 
+            doc.InsertParagraph(AngularText, false, headlineFormat);
+
+            for (int i = 0; i < repAngular.Count(); i++)
+            {
+                doc.InsertParagraph(repAngular[i], false, paraFormat);
+            }
+            //<- Angular
+            //Inertia ->
+            for (int i = 0; i < momC_Af.Count() && i < geoAgeo.Count() && i < geoCgeo.Count() && i < geoHgeo.Count() && i < momAdyn.Count() && i < momBdyn.Count() && i < momCdyn.Count(); i++)
+            {
+                repInertia.Add("(C-A)f" + i + " = " + momC_Af[i].ToString() + " kg m^2 " + "\r\n" +
+                                "Ageo" + i + " = " + geoAgeo[i].ToString() + " kg m^2 " + "\r\n" +
+                                "Cgeo" + i + " = " + geoCgeo[i].ToString() + " kg m^2 " + "\r\n" +
+                                "Hgeo" + i + " = " + geoHgeo[i].ToString() + " " + "\r\n" + 
+                                "Adyn" + i + " = " + momAdyn[i].ToString() + " kg m^2 " + "\r\n" +
+                                "Bdyn" + i + " = " + momBdyn[i].ToString() + " kg m^2 " + "\r\n" +
+                                "Cdyn" + i + " = " + momCdyn[i].ToString() + " kg m^2 " + "\r\n");
+            }
+            string InertiaText = "Значение моментов инерции";
+
+            doc.InsertParagraph(InertiaText, false, headlineFormat);
+            for (int i = 0; i < repAngular.Count(); i++)
+            {
+                doc.InsertParagraph(repInertia[i], false, paraFormat);
+            }
+            //<- Inertia
+            //EarthQ ->
+                repEarthQ.Add("Сигмент от 0 до 10 = " + Q0 + " зем/м^2" + "\r\n"
+                + "Сигмент от 10 до 20 = " + Q10 + " зем/м^2" + "\r\n"
+                + "Сигмент от 20 до 30 = " + Q20 + " зем/м^2" + "\r\n"
+                + "Сигмент от 30 до 40 = " + Q30 + " зем/м^2" + "\r\n"
+                + "Сигмент от 40 до 50 = " + Q40 + " зем/м^2" + "\r\n"
+                + "Сигмент от 50 до 60 = " + Q50 + " зем/м^2" + "\r\n"
+                + "Сигмент от 60 до 70 = " + Q60 + " зем/м^2" + "\r\n"
+                + "Сигмент от 70 до 80 = " + Q70 + " зем/м^2" + "\r\n"
+                + "Сигмент от 80 до 90 = " + Q80 + " зем/м^2" + "\r\n");
+
+            string EarthQText = "Количество землятрясений на один квадратный киллометр на сигментах с шагом в 10 градусов: ";
+
+            doc.InsertParagraph(EarthQText, false, headlineFormat);
+            foreach(var Q in repEarthQ)
+            {
+                doc.InsertParagraph(Q, false, paraFormat);
+            }
+            //<- EarthQ
+
             doc.Save();
             Process.Start("WINWORD.EXE", fileName);
         }
