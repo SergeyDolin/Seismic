@@ -1,0 +1,5 @@
+# INFLUENCE OF ROTARY POST-EFFECT ON DISCHARGE IN THE CORE LAYER
+In this work, experiments were carried out, the purpose of which was an attempt to establish a correlation between the constantly changing rotational regime of the planet and the discharge in the crustal layer. From the displacement of the time scales TAI, UTC and UT1, taken from the site of the International Earth Rotation Service (IERS), the average annual and monthly angular velocities of rotation were calculated for the period from 1962 to 2018, and a catalog of earthquakes from 1962 to 2018 was compiled. By the compiled algorithm and the written program, partial derivatives of the total deforming potential and the distribution, over the Earth's surface, of the number of earthquakes per year per one square kilometer are found. The results of analytical analysis and calculations for further research are presented.
+
+### DOI: 10.33764/2411-1759-2021-26-1-16-24
+#### https://www.researchgate.net/publication/350343603_Dolin_SV_Kanusin_VF_VLIANIE_ROTACIONNOGO_POSTEFFEKTA_NA_RAZRADKU_V_KOROVOM_SLOE
